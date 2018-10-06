@@ -1,0 +1,70 @@
+<html>
+<h1>ITTWeb FitnessApp Gruppe2</h1><br/><br/>
+<h2>Current Workout Program: #{currentWorkOutname}</h2>
+<table class="center">
+  <thead>
+    <tr>
+      <th height="40px">Excercise</th>
+      <th>Description</th>
+      <th>Set</th>
+      <th>Reps/time</th>
+    </tr>
+  </thead>
+  <tbody>
+  <div ng-repeat="n in [].Excercise track by $index">
+    <tr>{{index.exerciseName}}</tr>
+    <tr>{{index.description}}</tr>
+    <tr>{{index.set}}</tr>
+    <tr>{{index.reps}}</tr>
+    <tr>
+      <td style="border-style:none"> 
+        <form action="/removeExercise" method="post">
+          <input type="hidden" name="ExerciseName" value="{{index.exerciseName}}"/>
+          <input class="btn-danger" type="submit" value="Remove Exercise"/>
+        </form>
+      </td>
+    </tr>
+  </div>
+  </tbody>
+</table>
+<br/>
+<!-- <br/>
+<form action="/createExercise" method="post">
+  <input type="text" name="name" placeholder="Exercise Name"/>
+  <input type="text" name="description" placeholder="Exercise Description"/>
+  <input type="number" name="set" placeholder="Exercise Sets"/>
+  <input type="number" name="repsOrTime" placeholder="Exercise Repetitions/Time"/>
+  <input class="btn-success" type="submit" value="Add new Exercise"/>
+</form> -->
+<br/>
+<br/>
+<h2>All Workout Programs:</h2>
+<table class="center">
+  <thead>
+    <tr>
+      <th height="40px">Workout Program</th>
+    </tr>
+  </thead>
+    <tbody>
+      <tr>
+        <td style="border-style:none">
+          <!-- <form action="/selectWorkOut" method="post">
+            <input class="btn-success " type="submit" value="Select Program"/>
+          </form> -->
+        </td>
+        <td style="border-style:none">
+          <!-- <form action="/removeWorkout" method="post">
+            <input class="btn-danger" type="submit" value="Remove Workout Program"/>
+          </form> -->
+        </td>
+      </tr>
+    </tbody>
+</table>
+<br/>
+<br/>
+<!-- 
+<form action="/createWorkoutProgram" method="post">
+  <input type="text" name="createWorkoutName" placeholder="Workout program name"/>
+  <input class="btn-success" type="submit" value="Add new Workout program"/>
+</form> -->
+</html>
