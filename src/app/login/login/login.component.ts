@@ -31,8 +31,8 @@ export class LoginComponent implements OnInit {
     this.apiService.CreateUser(this.newusername.value);
   }
 
-  ngOnDestroy()
-  {
-    this.apiService.currentUser.unsubscribe();
-  }
+  // ngOnDestroy()
+  // {
+  //   this.apiService.currentUser.unsubscribe();
+  // }
 }

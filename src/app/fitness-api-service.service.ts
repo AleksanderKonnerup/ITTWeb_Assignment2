@@ -14,12 +14,14 @@ import { Exercise } from './Exercise'
 export class FitnessApiService {
   public currentUser : BehaviorSubject<User>;
   public currentWorkout : BehaviorSubject<WorkoutProgram>
+  public currentExercise : BehaviorSubject<Exercise>
   private sourceUrl = 'https://ittweb-assignment2-gruppe2.herokuapp.com/';
 
   constructor(private http: Http)
   {
     this.currentUser = new BehaviorSubject<User>(null);
     this.currentWorkout = new BehaviorSubject<WorkoutProgram>(null);
+    this.currentExercise = new BehaviorSubject<Exercise>(null);
   }
 
   Login(username: string): Promise<User>
@@ -50,42 +52,33 @@ export class FitnessApiService {
       .catch(this.handleError)
   }
 
-  DeleteUser(user: User) : Promise<User>
+  createWorkoutProgram(workoutName:string) : Promise<WorkoutProgram>
   {
-    let url = this.sourceUrl + 'api/users/' + user._id;
-
-    return this.http.delete(url)
-      .toPromise()
-      .catch(this.handleError);
-  }
-
-  createWorkoutProgram(user:User, workoutName:string) : Promise<User>
-  {
-    let url = this.sourceUrl + 'api/users/'+ user._id + '/workouts';
+    let url = this.sourceUrl + 'api/workouts';
     const body = {workoutName : workoutName};
 
     return this.http.post(url, body)
       .toPromise()
       .then((response) => 
         {
-          this.currentUser.next(response.json().User as User);
+          this.currentWorkout.next(response.json().WorkoutProgram as WorkoutProgram);
         })
       .catch(this.handleError); 
   }
 
-  removeWorkout(user : User, workoutId:string) : Promise<User>
+  removeWorkout(workoutId:string) : Promise<WorkoutProgram>
   {
-    let url = this.sourceUrl + 'api/users/' + user._id + '/workouts/' + workoutId;
+    let url = this.sourceUrl + 'api/workouts/' + workoutId;
 
     return this.http.delete(url)
       .toPromise()
-      .then((response) => this.currentUser.next(response.json().User as User))
+      .then((response) => this.currentWorkout.next(response.json().WorkoutProgram as WorkoutProgram))
       .catch(this.handleError);
   }
 
-  CreateExercise(user : User, workoutId:string, exercise: Exercise) : Promise<User>
+  CreateExercise(user : User, workoutId:string, exercise: Exercise) : Promise<Exercise>
   {
-    let url = this.sourceUrl + 'api/users/' + user._id + "/workouts/" + workoutId + "/exercises";
+    let url = this.sourceUrl + "api/workouts/" + workoutId + "/exercises";
 
     const body = {
       exercisename: exercise.exerciseName,
@@ -96,11 +89,11 @@ export class FitnessApiService {
 
     return this.http.post(url, body)
       .toPromise()
-      .then((response) => this.currentUser.next(response.json().User as User))
+      .then((response) => this.currentExercise.next(response.json().Exercise as Exercise))
       .catch(this.handleError);
   }
 
-  seletWorkout(workoutId:string) : Promise<User>
+  selectWorkout(workoutId:string) : Promise<WorkoutProgram>
   {
     let url = this.sourceUrl + 'api/workouts/';
     
@@ -111,23 +104,27 @@ export class FitnessApiService {
       .catch(this.handleError);
   }
 
-  DeleteExercise(user : User, workoutId:string, exerciseId: string) : Promise<User>
+  DeleteExercise(workoutId:string, exerciseId: string) : Promise<Exercise>
   {
-    let url = this.sourceUrl + 'api/users/' + user._id + "/workouts/" + workoutId + "/exercises/" + exerciseId;
+    let url = this.sourceUrl + "api/workouts/" + workoutId + "/exercises/" + exerciseId;
 
     return this.http.delete(url)
       .toPromise()
-      .then((response) => this.currentUser.next(response.json().User as User))
+      .then((response) => this.currentExercise.next(response.json().Exercise as Exercise))
       .catch(this.handleError);
   }
 
-  CreateWorkoutActivity(user : User, workoutId: string) : Promise<User>
+  CreateWorkoutActivity(workoutId: string, activityDescription: string) : Promise<WorkoutProgram>
   {
-    let url = this.sourceUrl + 'api/users/' + user._id + "/workouts/" + workoutId + "/workoutActivities";
+    let url = this.sourceUrl + "api/workouts/" + workoutId + "/workoutActivities";
 
-    return this.http.post(url, {})
+    const body = {
+      description: activityDescription
+    };
+
+    return this.http.post(url, body)
       .toPromise()
-      .then((response) => this.currentUser.next(response.json().updatedUser as User))
+      .then((response) => this.currentWorkout.next(response.json().WorkoutProgram as WorkoutProgram))
       .catch(this.handleError);
   }
 
