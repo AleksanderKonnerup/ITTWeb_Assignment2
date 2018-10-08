@@ -1,31 +1,28 @@
 <html>
-<h1>ITTWeb FitnessApp Gruppe2</h1><br/><br/>
-<h2>Current Workout Program: {{currentWorkout.workoutName}}</h2>
-<table class="center">
+<!-- <h2>Current Workout Program: {{currentWorkout.workoutName}}</h2> -->
+<table>
   <thead>
     <tr>
-      <th height="40px">Excercise</th>
+      <th>Excercise</th>
       <th>Description</th>
       <th>Set</th>
       <th>Reps/time</th>
     </tr>
   </thead>
   <tbody>
-  <div *ngFor="let exercise of currentWorkout.exercises">
-    <tr>{{exercise.exerciseName}}</tr>
-    <tr>{{exercise.description}}</tr>
-    <tr>{{exercise.sets}}</tr>
-    <tr>{{exercise.reps}}</tr>
-    <tr>
+    <tr *ngFor="let exercise of currentWorkout.exercises">
+    <td>{{exercise.exerciseName}}</td>
+    <td>{{exercise.description}}</td>
+    <td>{{exercise.sets}}</td>
+    <td>{{exercise.reps}}</td>
       <td style="border-style:none"> 
         <div class="col-md-5">
-          <input type="hidden" *ngIf="!isHidden" name="WorkoutId" class="form-control" [formControl]="workoutId" [ngModel]="{{currentWorkout._id}}"/>
-          <input type="hidden" *ngIf="!isHidden" name="ExerciseId" class="form-control" [formControl]="exerciseId" [ngModel]="{{exercise._id}}"/>
+          <!-- <input type="hidden" name="WorkoutId" class="form-control" [formControl]="workoutId" [ngModel]="{{currentWorkout._id}}"/>
+          <input type="hidden" name="ExerciseId" class="form-control" [formControl]="exerciseId" [ngModel]="{{exercise._id}}"/> -->
           <button class="btn-danger" (click)="removeExerciseClick()">Remove Exercise</button>
         </div>
       </td>
     </tr>
-  </div>
   </tbody>
 </table>
 <br/>
@@ -47,11 +44,11 @@
     <tbody>
       <tr>
         <td style="border-style:none">
-            <input type="hidden" *ngIf="!isHidden" name="WorkoutId" class="form-control" [formControl]="workoutId" [ngModel]="{{currentWorkout._id}}"/>
+            <!-- <input type="hidden" name="WorkoutId" class="form-control" [formControl]="workoutId" [ngModel]="{{currentWorkout._id}}"/> -->
             <button class="btn-success" (click)="selectWorkOutClick()" >Select Workout Program</button>
         </td>
         <td style="border-style:none">
-            <input type="hidden" *ngIf="!isHidden" name="WorkoutId" class="form-control" [formControl]="workoutId" [ngModel]="{{currentWorkout._id}}"/>
+            <!-- <input type="hidden" name="WorkoutId" class="form-control" [formControl]="workoutId" [ngModel]="{{currentWorkout._id}}"/> -->
             <button class="btn-danger" (click)="removeWorkOutClick()">Remove Workout Program</button>
         </td>
       </tr>

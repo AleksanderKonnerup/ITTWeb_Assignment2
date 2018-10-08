@@ -1,11 +1,13 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, Component } from '@angular/core';
 import { HttpModule } from '@angular/http';
 
 import { WorkoutModule } from './workouts/workout.module';
+
 import { LoginModule } from './login/login.module';
 
 import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app-routing.module';
 
 import { FitnessApiService } from './fitness-api-service.service';
 
@@ -17,7 +19,8 @@ import { FitnessApiService } from './fitness-api-service.service';
     BrowserModule,
     HttpModule,
     WorkoutModule,
-    LoginModule
+    LoginModule,
+    AppRoutingModule
   ],
   providers: [FitnessApiService],
   bootstrap: [AppComponent]
