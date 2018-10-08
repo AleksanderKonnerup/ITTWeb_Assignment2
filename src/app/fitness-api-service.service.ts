@@ -13,15 +13,21 @@ import { environment } from '../environments/environment.prod';
 export class FitnessApiService {
   public currentUser : BehaviorSubject<User>;
   public currentWorkout : BehaviorSubject<WorkoutProgram>
-  
+  public allWorkouts : BehaviorSubject<WorkoutProgram[]>
+
   //private sourceUrl = 'https://ittweb-assignment2-gruppe2.herokuapp.com/';
   baseUrl: string;
 
   constructor(private http: Http)
   {
+    let workoutArray: WorkoutProgram[] = [];
     let defaultWorkout = new WorkoutProgram();
     let defaultExercise = new Exercise();
+    let defaultUser = new User();
 
+    defaultUser.username = null;
+
+    defaultExercise._id = "fakeAF";
     defaultExercise.exerciseName = "My First Exercise";
     defaultExercise.description = "My First Description";
     defaultExercise.sets = 1;
@@ -34,10 +40,12 @@ export class FitnessApiService {
     defaultWorkout.workoutName = "My First Workout";
     defaultWorkout.exercises = defaultExerciseArray;
 
+    workoutArray.push(defaultWorkout);
+
     this.baseUrl= environment.api;
-    this.currentUser = new BehaviorSubject<User>(null);
+    this.currentUser = new BehaviorSubject<User>(defaultUser);
     this.currentWorkout = new BehaviorSubject<WorkoutProgram>(defaultWorkout);
-    
+    this.allWorkouts = new BehaviorSubject<WorkoutProgram[]>(workoutArray);
   }
   
 
