@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const exercises = require('./controllers/exerciseController');
-const workouts = require('./controllers/workouts');
-const users = require('./controllers/users')
+const workouts = require('./controllers/workoutController');
+const users = require('./controllers/userController')
 
 router.post('/exercises/:workoutId', exercises.CreateExercise);
 router.delete('/exercises/:workoutId', exercises.DeleteExercise);

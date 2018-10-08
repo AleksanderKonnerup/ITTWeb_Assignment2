@@ -11,7 +11,7 @@ import { FitnessApiService } from './fitness-api-service.service';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,

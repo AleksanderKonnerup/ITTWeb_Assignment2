@@ -83,8 +83,8 @@ const CreateWorkoutActivity = function(req, res) {
 
 
 module.exports = {
-    CreateExercise, 
-    DeleteExercise,
+    createWorkoutProgram,
+    removeWorkout,
     selectWorkout,
     CreateWorkoutActivity
 };

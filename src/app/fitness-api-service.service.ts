@@ -76,7 +76,7 @@ export class FitnessApiService {
       .catch(this.handleError);
   }
 
-  CreateExercise(user : User, workoutId:string, exercise: Exercise) : Promise<Exercise>
+  CreateExercise(workoutId:string, exercise: Exercise) : Promise<Exercise>
   {
     let url = this.sourceUrl + "api/workouts/" + workoutId + "/exercises";
 

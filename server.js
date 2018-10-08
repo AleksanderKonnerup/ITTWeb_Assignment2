@@ -1,5 +1,4 @@
 require('dotenv').config();
-require('./server/db');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -13,11 +12,11 @@ const port = (process.env.PORT || 3000);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors(corsOptions));
-app.use(express.static(dirname + '/dist'));
+app.use(express.static(__dirname + '/src'));
 
 app.use('/api', api);
 app.all('*', function(req, res) {
-  res.status(200).sendFile(dirname + '/dist/index.html');
+  res.status(200).sendFile(__dirname + '/src/index.html');
 });
 
 server.listen(port);

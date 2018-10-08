@@ -1,6 +1,6 @@
 <html>
 <h1>ITTWeb FitnessApp Gruppe2</h1><br/><br/>
-<h2>Current Workout Program: #{currentWorkOutname}</h2>
+<h2>Current Workout Program: {{currentWorkout.workoutName}}</h2>
 <table class="center">
   <thead>
     <tr>
@@ -11,17 +11,18 @@
     </tr>
   </thead>
   <tbody>
-  <div ng-repeat="n in [].Excercise track by $index">
-    <tr>{{index.exerciseName}}</tr>
-    <tr>{{index.description}}</tr>
-    <tr>{{index.set}}</tr>
-    <tr>{{index.reps}}</tr>
+  <div *ngFor="let exercise of currentWorkout.exercises">
+    <tr>{{exercise.exerciseName}}</tr>
+    <tr>{{exercise.description}}</tr>
+    <tr>{{exercise.sets}}</tr>
+    <tr>{{exercise.reps}}</tr>
     <tr>
       <td style="border-style:none"> 
-        <form action="/removeExercise" method="post">
-          <input type="hidden" name="ExerciseName" value="{{index.exerciseName}}"/>
-          <input class="btn-danger" type="submit" value="Remove Exercise"/>
-        </form>
+        <div class="col-md-5">
+          <input type="hidden" *ngIf="!isHidden" name="WorkoutId" class="form-control" [formControl]="workoutId" [ngModel]="{{currentWorkout._id}}"/>
+          <input type="hidden" *ngIf="!isHidden" name="ExerciseId" class="form-control" [formControl]="exerciseId" [ngModel]="{{exercise._id}}"/>
+          <button class="btn-danger" (click)="removeExerciseClick()">Remove Exercise</button>
+        </div>
       </td>
     </tr>
   </div>
@@ -29,13 +30,11 @@
 </table>
 <br/>
 <br/>
-<form action="/createExercise" method="post">
-  <input type="text" name="name" placeholder="Exercise Name"/>
-  <input type="text" name="description" placeholder="Exercise Description"/>
-  <input type="number" name="set" placeholder="Exercise Sets"/>
-  <input type="number" name="repsOrTime" placeholder="Exercise Repetitions/Time"/>
-  <input class="btn-success" type="submit" value="Add new Exercise"/>
-</form>
+  <input type="text" name="exerciseName" class="form-control" [formControl]="exerciseName" placeholder="Exercise Name"/>
+  <input type="text" name="exerciseDescription" class="form-control" [formControl]="exerciseDescription" placeholder="Exercise Description"/>
+  <input type="number" name="exerciseSet" class="form-control" [formControl]="exerciseSet" placeholder="Exercise Sets"/>
+  <input type="number" name="exerciseReps" class="form-control" [formControl]="exerciseReps" placeholder="Exercise Repetitions/Time"/>
+  <button class="btn-success" (click)="createExerciseClick()">Add new Exercise</button>
 <br/>
 <br/>
 <h2>All Workout Programs:</h2>
@@ -48,23 +47,18 @@
     <tbody>
       <tr>
         <td style="border-style:none">
-          <form action="/selectWorkOut" method="post">
-            <input class="btn-success " type="submit" value="Select Program"/>
-          </form>
+            <input type="hidden" *ngIf="!isHidden" name="WorkoutId" class="form-control" [formControl]="workoutId" [ngModel]="{{currentWorkout._id}}"/>
+            <button class="btn-success" (click)="selectWorkOutClick()" >Select Workout Program</button>
         </td>
         <td style="border-style:none">
-          <form action="/removeWorkout" method="post">
-            <input class="btn-danger" type="submit" value="Remove Workout Program"/>
-          </form>
+            <input type="hidden" *ngIf="!isHidden" name="WorkoutId" class="form-control" [formControl]="workoutId" [ngModel]="{{currentWorkout._id}}"/>
+            <button class="btn-danger" (click)="removeWorkOutClick()">Remove Workout Program</button>
         </td>
       </tr>
     </tbody>
 </table>
 <br/>
 <br/>
-
-<form action="/createWorkoutProgram" method="post">
-  <input type="text" name="createWorkoutName" placeholder="Workout program name"/>
-  <input class="btn-success" type="submit" value="Add new Workout program"/>
-</form>
+  <input type="text" name="WorkoutName" class="form-control" [formControl]="workoutName" placeholder="Workout program name"/>
+  <button class="btn-success" (click)="createWorkoutProgramClick()">Add new Workout program</button>
 </html>

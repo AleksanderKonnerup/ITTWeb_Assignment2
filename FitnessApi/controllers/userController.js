@@ -33,6 +33,5 @@ const Login = function(req, res) {
 
 module.exports = {
     CreateUser, 
-    DeleteUser,
     Login
 };

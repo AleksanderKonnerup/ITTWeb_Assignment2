@@ -14,9 +14,7 @@ export class LoginComponent implements OnInit {
   newusername = new FormControl();
 
   constructor(private apiService : FitnessApiService) 
-  {
-    console.log("This comes from LoginComponent!");
-  }
+  {}
 
   ngOnInit() {
   }
