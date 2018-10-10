@@ -9,6 +9,7 @@ import { FitnessApiService } from '../../fitness-api-service.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+  currentUser = this.apiService.currentUser.value;
 
   username = new FormControl();
   newusername = new FormControl();
@@ -21,6 +22,10 @@ export class LoginComponent implements OnInit {
 
   loginClick()
   {
+    this.apiService.Login(this.username.value);
+  }
+
+  logoutClick(){
     this.apiService.Login(this.username.value);
   }
 

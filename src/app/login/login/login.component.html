@@ -1,12 +1,23 @@
+<html>
 <div class="row d-flex justify-content-center site-content">
   <div class="col-md-5">
-    <p>Login:</p>
-     <input class="form-control" [formControl]="username"/>
-    <button class="btn btn-success" (click)="loginClick()">Login</button> 
+    <div *ngIf="currentUser.username === 'firstUser'">
+        <h3>Login:</h3>
+        <input class="form-control" [formControl]="username" placeholder="Username"/>
+        <button class="btn btn-success" (click)="loginClick()">Login</button>
+      </div>
+      <div *ngIf="currentUser.username !== 'firstUser'">
+        <h2>CurrentUser: {{currentUser.username}}</h2>
+        <button class="btn btn-danger" (click)="logoutClick()">Logout</button>
+      </div>
   </div>
+  
   <div class="col-md-5">
-    <p>Create new user</p>
-    <input class="form-control" [formControl]="newusername"/>
+    <h3>Create new user:</h3>
+    <input class="form-control" [formControl]="newusername" placeholder="New Username"/>
     <button class="btn btn-success" (click)="onCreateUserClick()">Create new User</button>
   </div>
 </div>
+<br/>
+<br/>
+</html>

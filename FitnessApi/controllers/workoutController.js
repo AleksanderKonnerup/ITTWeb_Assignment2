@@ -39,7 +39,6 @@ const selectWorkout = function(req, res) {
         
         var selectedWorkout = db.db("ITTWEBAssignment2").collection("Workout").find({"_id" : ObjectId(req.url.workoutId) },function(err, result){
             assert.equal(null, err);
-            console.log("Workout deleted");
         });
 
         var resultArray = [];
@@ -82,9 +81,25 @@ const CreateWorkoutActivity = function(req, res) {
 };
 
 
+const GetAllWorkouts = function(req, res) {
+    var allWorkouts = [];
+    
+    MongoClient.connect(url,{useNewUrlParser:true},function(err, db){
+        assert.equal(null, err);
+
+        db.db("ITTWEBAssignment2").collection("Workout").find({},function(err, result){
+            assert.equal(null, err);
+            allWorkouts.push(result);
+        });
+    }).then(() => {
+        return allWorkouts;
+    });;
+}
+
 module.exports = {
     createWorkoutProgram,
     removeWorkout,
     selectWorkout,
-    CreateWorkoutActivity
+    CreateWorkoutActivity,
+    GetAllWorkouts
 };

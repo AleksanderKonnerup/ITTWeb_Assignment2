@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Headers, Http } from '@angular/http';
 import {BehaviorSubject} from 'rxjs';
-//import 'rxjs/add/operator/toPromise';
 
 import { User } from './User'
 import { WorkoutProgram } from './Workout'
 import { Exercise } from './Exercise'
-import { environment } from '../environments/environment.prod';
 
 @Injectable()
 
@@ -16,8 +14,10 @@ export class FitnessApiService {
   public allWorkouts : BehaviorSubject<WorkoutProgram[]>
 
   //private sourceUrl = 'https://ittweb-assignment2-gruppe2.herokuapp.com/';
-  baseUrl: string;
-
+  private baseUrl: string;
+  private headers = new Headers({'Content-Type': 'application/json', 
+'Accept': 'application/json','Access-Control-Allow-Origin': '*'});
+  
   constructor(private http: Http)
   {
     let workoutArray: WorkoutProgram[] = [];
@@ -25,7 +25,8 @@ export class FitnessApiService {
     let defaultExercise = new Exercise();
     let defaultUser = new User();
 
-    defaultUser.username = null;
+    defaultUser.username = "firstUser";
+    defaultUser._id = "fakeUserId";
 
     defaultExercise._id = "fakeAF";
     defaultExercise.exerciseName = "My First Exercise";
@@ -42,22 +43,21 @@ export class FitnessApiService {
 
     workoutArray.push(defaultWorkout);
 
-    this.baseUrl= environment.api;
+    this.baseUrl= "http://localhost:3000/api";
     this.currentUser = new BehaviorSubject<User>(defaultUser);
     this.currentWorkout = new BehaviorSubject<WorkoutProgram>(defaultWorkout);
     this.allWorkouts = new BehaviorSubject<WorkoutProgram[]>(workoutArray);
   }
-  
 
   Login(username: string): Promise<User>
   {
     let url = this.baseUrl + '/users/' + username;
 
-    return this.http.get(url)
+    return this.http.get(url, {headers: this.headers})
       .toPromise()
       .then((response) =>
         {
-          this.currentUser.next(response.json().User as User);
+         this.currentUser.next(response.json().User as User);
         })
       .catch(this.handleError);
   }
@@ -65,16 +65,29 @@ export class FitnessApiService {
   CreateUser(username: string) : Promise<User>
   {
     let url = this.baseUrl + '/users';
-    const body = {"username" : username};
+    const body = JSON.stringify({username: username});
 
-    return this.http.post(url, body)  
+    return this.http.post(url, body, {headers: this.headers})  
       .toPromise()
       .then((response) =>
         {
-          console.log(response.json().User as User);
-          this.currentUser.next(response.json().User as User);
+          console.log(response.text());
+          var text = JSON.parse(response.text());
+          console.log(text);
+          this.currentUser.next(text.User as User);
         })
       .catch(this.handleError)
+  }
+
+  GetAllWorkouts() : Promise<WorkoutProgram[]> 
+  {
+    let url = this.baseUrl + '/workouts';
+
+    return this.http.get(url)
+                    .toPromise()
+                    .then((response) => {
+                      this.allWorkouts.next(response.json().WorkoutProgram as WorkoutProgram[])
+                    }).catch(this.handleError);
   }
 
   createWorkoutProgram(workoutName:string) : Promise<WorkoutProgram>

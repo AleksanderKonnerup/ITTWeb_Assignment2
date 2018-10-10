@@ -14,6 +14,7 @@ import { User } from '../../User';
 export class WorkoutsComponent implements OnInit {
   currentWorkout = this.apiService.currentWorkout.value;
   currentUser = this.apiService.currentUser.value;
+  allWorkouts = this.apiService.allWorkouts.value;
 
   workoutId = new FormControl();
   workoutName = new FormControl();

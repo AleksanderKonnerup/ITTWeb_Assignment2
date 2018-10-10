@@ -12,7 +12,7 @@ body {
   
   h1 {
     font: 24px "Palatino" bold;
-    color: rgb(122, 122, 201);
+    color: blue(122, 122, 201);
   }
   
   h2{
