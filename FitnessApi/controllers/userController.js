@@ -1,35 +1,31 @@
 const MongoClient = require('mongodb').MongoClient;
-const url = "mongodb+srv://test:test@ittwebassignment1-9rxs5.mongodb.net/ITTWEBAssignment2?retryWrites=true";
+//const url = "mongodb+srv://test:test@itwebassignment2-l9jgn.mongodb.net";
+const url = "mongodb://127.0.0.1:27017/ITWEB_Assignment_2";
 const assert = require('assert');
+const User = require('../models/User.js');
 
 const CreateUser = function(req, res) {
-    var User = {username: req.body.username};
+    const user = {username: req.body.username};
 
     MongoClient.connect(url,{useNewUrlParser:true},function(err, db){
         assert.equal(null, err);
-        db.db('ITTWEBAssignment2').collection('User').insertOne(User, function(err, result){
-            assert.equal(null,err);
-            console.log("User added");
-        });
+        db.db('ITWEB_Assignment_2').collection('User').insertOne(user)
+                                                     .then((userResult) => res.status(201).json({currentUser: userResult}))
+                                                     .catch((err) => res.status(400).send(err));
     });
-
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Content-Type', 'application/json');    
-
-    res.status(200).json({currentUser: User});
-    // res.redirect("/");
 };
 
 const Login = function(req, res) {
+    var isLoggedIn = false;
+    
     MongoClient.connect(url,{useNewUrlParser:true},function(err, db){
-    db.db("ITTWEBAssignment2").collection("User").find({"username": req.url.username}, (err, data) => {
+    db.db("ITWEB_Assignment_2").collection("User").find({username: req.params.username}, function(err, user) {
         assert.equal(null, err);
-
-        return data;
-        })
+        isLoggedIn = true;
+        user => res.status(200).json({currentUser: user, LoggedIn: isLoggedIn});
+    })
     });
-};
-
+};  
 
 module.exports = {
     CreateUser, 

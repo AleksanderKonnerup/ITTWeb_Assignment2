@@ -3,7 +3,6 @@ import { FormControl } from '@angular/forms';
 
 import { FitnessApiService } from '../../fitness-api-service.service';
 import { Exercise } from '../../Exercise';
-import { User } from '../../User';
 
 @Component({
   selector: 'app-workouts',

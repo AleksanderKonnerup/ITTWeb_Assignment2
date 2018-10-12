@@ -1,5 +1,5 @@
 <html>
-<div *ngIf="currentUser.username !== 'firstUser'">
+<div *ngIf="LoggedIn">
   <h2>Current Workout Program: {{currentWorkout.workoutName}}</h2>
   <table>
     <thead>
@@ -46,7 +46,7 @@
     <tbody>
       <tr *ngFor="let workout of allWorkouts">
         <td>{{workout.workoutName}}</td>
-        <div *ngIf="currentUser.username !== 'firstUser'">
+        <div *ngIf="LoggedIn">
           <td style="border-style:none">
               <input type="hidden" name="WorkoutId" class="form-control" [formControl]="workoutId" [(ngModel)]="currentWorkout._id"/>
               <button class="btn-success" (click)="selectWorkOutClick()" >Select Workout Program</button>
@@ -61,7 +61,7 @@
   </table>
   <br/>
   <br/>
-  <div *ngIf="currentUser.username !== 'firstUser'">
+  <div *ngIf="LoggedIn">
     <input type="text" name="WorkoutName" class="form-control" [formControl]="workoutName" placeholder="Workout program name"/>
     <button class="btn-success" (click)="createWorkoutProgramClick()">Add new Workout program</button>
   </div>

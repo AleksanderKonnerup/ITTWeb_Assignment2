@@ -1,18 +1,18 @@
 <html>
 <div class="row d-flex justify-content-center site-content">
   <div class="col-md-5">
-    <div *ngIf="currentUser.username === 'firstUser'">
+    <div *ngIf="!LoggedIn">
         <h3>Login:</h3>
         <input class="form-control" [formControl]="username" placeholder="Username"/>
         <button class="btn btn-success" (click)="loginClick()">Login</button>
-      </div>
-      <div *ngIf="currentUser.username !== 'firstUser'">
+    </div>
+      <div *ngIf="LoggedIn">
         <h2>CurrentUser: {{currentUser.username}}</h2>
         <button class="btn btn-danger" (click)="logoutClick()">Logout</button>
       </div>
   </div>
   
-  <div class="col-md-5">
+  <div *ngIf="!LoggedIn" class="col-md-5">
     <h3>Create new user:</h3>
     <input class="form-control" [formControl]="newusername" placeholder="New Username"/>
     <button class="btn btn-success" (click)="onCreateUserClick()">Create new User</button>

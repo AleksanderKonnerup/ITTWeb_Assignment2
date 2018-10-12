@@ -1,5 +1,7 @@
 const MongoClient = require('mongodb').MongoClient;
-const url = "mongodb+srv://test:test@ittwebassignment1-9rxs5.mongodb.net/ITTWEBAssignment2?retryWrites=true";
+//const url = "mongodb+srv://test:test@itwebassignment2-l9jgn.mongodb.net/admin";
+const url = "mongodb://127.0.0.1:27017/ITWEB_Assignment_2";
+
 const mongoose = require('mongoose');
 const Exercise = require('../models/Exercise');
 const assert = require('assert');
@@ -76,7 +78,7 @@ const CreateWorkoutActivity = function(req, res) {
         }}});
     })
 
-    console.log("Exercise added");
+    console.log("Activity added");
     res.redirect("/");
 };
 
