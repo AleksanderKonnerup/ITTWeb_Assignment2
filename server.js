@@ -10,16 +10,23 @@ const path = require('path');
 
 const port = (process.env.PORT || 3000);
 
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-
-app.use('/api', api, function(req, res, next){
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('content-type', 'application/json');
+app.use(express.static(path.join(__dirname, '/src')));
+app.use('/api', function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  //res.header('Content-Type', 'application/json');
   next();
 });
+
+var distDir = __dirname + "/dist/";
+app.use(express.static(distDir));
+
+app.use('/api', api)
 app.all('*', function(req, res) {
-  res.status(200).sendFile(path.resolve(__dirname + '/src/index.html'));
+  res.status(200).sendFile(__dirname + '/src/index.html');
 });
 
 server.listen(port,function(){

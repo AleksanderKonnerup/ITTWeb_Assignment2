@@ -1,6 +1,5 @@
 const MongoClient = require('mongodb').MongoClient;
-//const url = "mongodb+srv://test:test@itwebassignment2-l9jgn.mongodb.net/admin";
-const url = "mongodb://127.0.0.1:27017/ITWEB_Assignment_2";
+const url = "mongodb://test:test@itwebassignment2-shard-00-00-l9jgn.mongodb.net:27017,itwebassignment2-shard-00-01-l9jgn.mongodb.net:27017,itwebassignment2-shard-00-02-l9jgn.mongodb.net:27017/test?ssl=true&replicaSet=ITWEBAssignment2-shard-0&authSource=admin&retryWrites=true";
 
 const mongoose = require('mongoose');
 const Exercise = require('../models/Exercise');
@@ -15,11 +14,11 @@ const CreateExercise = function(req, res) {
     MongoClient.connect(url,{useNewUrlParser:true},function(err, db){
         assert.equal(null, err);
         
-        db.db('ITTWEBAssignment2').collection('Exercise').insertOne(exercise, function(err, result){
+        db.db('ITWEB_Assignment_2').collection('Exercise').insertOne(exercise, function(err, result){
             assert.equal(null,err);
         });
 
-        db.db('ITTWEBAssignment2').collection('Workout').update({_id: ObjectId(req.url.workoutId)},
+        db.db('ITWEB_Assignment_2').collection('Workout').update({_id: ObjectId(req.url.workoutId)},
         { $push: {"exercises": {
             exerciseName: req.body.name
         }}});
@@ -33,11 +32,11 @@ const DeleteExercise = function(req, res) {
     MongoClient.connect(url,{useNewUrlParser:true},function(err, db){
         assert.equal(null, err);
         
-        db.db("ITTWEBAssignment2").collection("Exercise").findOneAndDelete({"exercisename" : req.body.name },function(err, result){
+        db.db("ITWEB_Assignment_2").collection("Exercise").findOneAndDelete({"exercisename" : req.body.name },function(err, result){
             assert.equal(null, err);
         });
 
-        db.db("ITTWEBAssignment2").collection("Workout").update({_id: ObjectId(req.url.workoutId)},
+        db.db("ITWEB_Assignment_2").collection("Workout").update({_id: ObjectId(req.url.workoutId)},
         { $pull: {"exercises": {
             exerciseName: req.body.name
         }}});

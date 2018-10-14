@@ -1,7 +1,7 @@
 <html>
-<div *ngIf="LoggedIn">
+<div *ngIf="LoggedIn.value">
   <h2>Current Workout Program: {{currentWorkout.workoutName}}</h2>
-  <table>
+  <table class="center">
     <thead>
       <tr>
         <th>Excercise</th>
@@ -11,19 +11,21 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let exercise of currentWorkout.exercises">
+      <div *ngIf="currentWorkout.value.exercises !== null">
+      <tr *ngFor="let exercise of currentWorkout.value.exercises">
         <td>{{exercise.exerciseName}}</td>
         <td>{{exercise.description}}</td>
         <td>{{exercise.sets}}</td>
         <td>{{exercise.reps}}</td>
         <td style="border-style:none"> 
           <div class="col-md-5">
-            <input type="hidden" name="WorkoutId" class="form-control" [formControl]="workoutId" [(ngModel)]="currentWorkout._id"/>
+            <input type="hidden" name="WorkoutId" class="form-control" [formControl]="workoutId" [(ngModel)]="currentWorkout.value._id"/>
             <input type="hidden" name="ExerciseId" class="form-control" [formControl]="exerciseId" [(ngModel)]="exercise._id"/>
             <button class="btn-danger" (click)="removeExerciseClick()">Remove Exercise</button>
           </div>
         </td>
       </tr>
+    </div>
     </tbody>
   </table>
   <br/>
@@ -44,24 +46,26 @@
     </tr>
   </thead>
     <tbody>
-      <tr *ngFor="let workout of allWorkouts">
+    <div *ngIf="allWorkouts.value !== null">
+      <tr *ngFor="let workout of allWorkouts.value">
         <td>{{workout.workoutName}}</td>
-        <div *ngIf="LoggedIn">
+        <div *ngIf="LoggedIn.value">
           <td style="border-style:none">
-              <input type="hidden" name="WorkoutId" class="form-control" [formControl]="workoutId" [(ngModel)]="currentWorkout._id"/>
+              <input type="hidden" name="WorkoutId" class="form-control" [formControl]="workoutId" [(ngModel)]="workout._id"/>
               <button class="btn-success" (click)="selectWorkOutClick()" >Select Workout Program</button>
           </td>
           <td style="border-style:none">
-              <input type="hidden" name="WorkoutId" class="form-control" [formControl]="workoutId" [(ngModel)]="currentWorkout._id"/>
+              <input type="hidden" name="WorkoutId" class="form-control" [formControl]="workoutId" [(ngModel)]="workout._id"/>
               <button class="btn-danger" (click)="removeWorkOutClick()">Remove Workout Program</button>
           </td>
         </div>
       </tr>
+      </div>
     </tbody>
   </table>
   <br/>
   <br/>
-  <div *ngIf="LoggedIn">
+  <div *ngIf="LoggedIn.value">
     <input type="text" name="WorkoutName" class="form-control" [formControl]="workoutName" placeholder="Workout program name"/>
     <button class="btn-success" (click)="createWorkoutProgramClick()">Add new Workout program</button>
   </div>

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-module.exports = WorkoutProgram = new Schema({
+const WorkoutSchema = new Schema({
     _id: {
         type: String,
         required: true,
@@ -21,3 +21,7 @@ module.exports = WorkoutProgram = new Schema({
         ref: 'Exercise'
     }]
 });
+
+const WorkoutProgram =  mongoose.model("WorkoutProgram", WorkoutSchema);
+
+module.exports = WorkoutProgram;

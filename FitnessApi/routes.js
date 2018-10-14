@@ -5,7 +5,7 @@ const workouts = require('./controllers/workoutController');
 const users = require('./controllers/userController');
 
 router.post('/exercises/CreateExercise/:workoutId', exercises.CreateExercise);
-router.delete('/exercises/DeleteExercise/:workoutId', exercises.DeleteExercise);
+router.delete('/exercises/DeleteExercise/:workoutId/:exerciseId', exercises.DeleteExercise);
 
 router.post('/workouts/CreateWorkoutProgram/', workouts.createWorkoutProgram);
 router.delete('/workouts/removeWorkout/:workoutId', workouts.removeWorkout);
