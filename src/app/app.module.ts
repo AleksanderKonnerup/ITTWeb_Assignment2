@@ -3,7 +3,7 @@ import { NgModule, Component } from '@angular/core';
 import { HttpModule } from '@angular/http';
 
 import { WorkoutModule } from './workouts/workout.module';
-
+import { HttpClientModule} from '@angular/common/http'
 import { LoginModule } from './login/login.module';
 
 import { AppComponent } from './app.component';
@@ -20,7 +20,8 @@ import { FitnessApiService } from './fitness-api-service.service';
     HttpModule,
     WorkoutModule,
     LoginModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule
   ],
   providers: [FitnessApiService],
   bootstrap: [AppComponent]

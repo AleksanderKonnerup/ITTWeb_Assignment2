@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
-import { Headers, Http, XHRBackend, RequestOptions } from '@angular/http';
-import {BehaviorSubject, Subject} from 'rxjs';
-
+import {BehaviorSubject, Subject, Observable} from 'rxjs';
+import {HttpClient} from '@angular/common/http'
 import { User } from './User';
 import { WorkoutProgram } from './Workout';
 import { Exercise } from './Exercise';
+import { ActivityLog } from './ActivityLog';
 import { environment } from 'src/environments/environment';
 
 @Injectable()
 
 export class FitnessApiService {
-  public currentUser : BehaviorSubject<User>;
-  public currentWorkout : BehaviorSubject<WorkoutProgram>
-  public allWorkouts : BehaviorSubject<WorkoutProgram[]>
-  public LoggedIn : BehaviorSubject<Boolean>
+  public static currentUser : BehaviorSubject<User>;
+  public static currentWorkout : BehaviorSubject<WorkoutProgram>;
+  public static allWorkouts : BehaviorSubject<WorkoutProgram[]>;
+  public static LoggedIn : BehaviorSubject<Boolean>;
 
   private baseUrl: string;
 
@@ -21,13 +21,12 @@ export class FitnessApiService {
   onCreateUser$ = this.createUserSource.asObservable();
 
 
-  constructor(private http: Http)
+  constructor(private http: HttpClient)
   {
     let workoutArray: WorkoutProgram[] = [];
     let defaultWorkout = new WorkoutProgram();
     let defaultExercise = new Exercise();
     let defaultUser = new User();
-    let loggedIn = new Boolean(false);
 
     defaultUser.username = "firstUser";
     defaultUser._id = "fakeUserId";
@@ -49,95 +48,64 @@ export class FitnessApiService {
 
     this.baseUrl= environment.api;
 
-    this.currentUser = new BehaviorSubject<User>(defaultUser);
-    this.currentWorkout = new BehaviorSubject<WorkoutProgram>(defaultWorkout);
-    this.allWorkouts = new BehaviorSubject<WorkoutProgram[]>(workoutArray);
-    this.LoggedIn = new BehaviorSubject<Boolean>(loggedIn);
+    FitnessApiService.currentUser = new BehaviorSubject<User>(defaultUser);
+    FitnessApiService.currentWorkout = new BehaviorSubject<WorkoutProgram>(defaultWorkout);
+    FitnessApiService.allWorkouts = new BehaviorSubject<WorkoutProgram[]>(workoutArray);
+    FitnessApiService.LoggedIn = new BehaviorSubject<Boolean>(false);
   }
 
-  Login(username: string): Promise<User>
+  Login(username: string)
   {
     let url = this.baseUrl + '/users/Login/' + username;
 
-    return this.http.post(url, null)
-      .toPromise()
-      .then((response) =>
-        {
-         this.currentUser.next(response.json().currentUser as User);
-         this.LoggedIn.next(response.json().LoggedIn as Boolean);
-        })
-      .catch(this.handleError);
+    return this.http.post<User>(url, null);
   }
 
-  GetCurrentUser() : User
+  GetCurrentUser()
   {
-    let url = this.baseUrl + '/users/GetCurrentUser';
-
-    return this.currentUser.value;
+    if(FitnessApiService.currentUser.value !== null)
+      return FitnessApiService.currentUser;
   }
 
-  CreateUser(username: string) : Promise<User>
+  CreateUser(username: string)
   {
     let url = this.baseUrl + '/users/CreateUser';
-    const body = JSON.stringify({username: username});
+    const body = {username: username};
 
-    return this.http.post(url, body)  
-      .toPromise()
-      .then((response) =>
-        {
-          this.currentUser.next(response.json().currentUser as User);
-        })
-      .catch(this.handleError)
-      // return this.http.post(`${this.baseUrl}/users/CreateUser`, body, {headers: this.headers})  
-      // .subscribe(data =>
-      //   {
-      //     const token = data['token'];
-      //     if(token){
-      //     this.currentUser.subscribe(_user => {
-      //       localStorage.setItem('_id', _user._id);
-      //       localStorage.setItem('username', _user.username);
-      //     }
-      //     });
-      //     this.createUserSource.next(data);
-      //   })
+    return this.http.post<User>(url, body);
   }
 
-  GetAllWorkouts() : Promise<WorkoutProgram[]> 
+
+  GetAllWorkouts() 
   {
     let url = this.baseUrl + '/workouts/GetAllWorkouts/';
+    let array = [];
 
-    return this.http.get(url)
-                    .toPromise()
-                    .then((response) => {
-                      this.allWorkouts.next(response.json().WorkoutProgram as WorkoutProgram[])
-                    }).catch(this.handleError);
+    return this.http.get<WorkoutProgram[]>(url).subscribe(result => {
+      array = result;
+
+      console.log(result);
+
+      FitnessApiService.allWorkouts.next(array);
+    });
   }
 
-  createWorkoutProgram(workoutName:string) : Promise<WorkoutProgram>
+  createWorkoutProgram(WorkoutProgram: WorkoutProgram)
   {
     let url = this.baseUrl + '/workouts/CreateWorkoutProgram/';
-    const body = {workoutName : workoutName};
+    const body = {workoutName : WorkoutProgram.workoutName};
 
-    return this.http.post(url, body)
-      .toPromise()
-      .then((response) => 
-        {
-          this.currentWorkout.next(response.json().WorkoutProgram as WorkoutProgram);
-        })
-      .catch(this.handleError); 
+    return this.http.post<WorkoutProgram>(url, body);
   }
 
-  removeWorkout(workoutId:string) : Promise<WorkoutProgram>
+  removeWorkout(workoutId:string)
   {
     let url = this.baseUrl + '/workouts/removeWorkout/' + workoutId;
 
-    return this.http.delete(url)
-      .toPromise()
-      .then((response) => this.currentWorkout.next(response.json().WorkoutProgram as WorkoutProgram))
-      .catch(this.handleError);
+    return this.http.delete<WorkoutProgram>(url);
   }
 
-  CreateExercise(workoutId:string, exercise: Exercise) : Promise<WorkoutProgram>
+  CreateExercise(workoutId:string, exercise: Exercise)
   {
     let url = this.baseUrl + "/exercises/CreateExercise/" + workoutId;
 
@@ -148,35 +116,25 @@ export class FitnessApiService {
       reps: exercise.reps
     };
 
-    return this.http.post(url, body)
-      .toPromise()
-      .then((response) => this.currentWorkout.next(response.json().WorkoutProgram as WorkoutProgram))
-      .catch(this.handleError);
+    return this.http.post<Exercise>(url, body);
   }
 
-  selectWorkout(workoutId:string) : Promise<WorkoutProgram>
+  selectWorkout(workoutId:string)
   {
     let url = this.baseUrl + '/workouts/selectWorkout/';
     const body = {workoutId: workoutId};
 
-    return this.http.post(url, body)
-      .toPromise()
-      .then((response) => this.currentWorkout.next(response.json().WorkoutProgram as WorkoutProgram))
-      .catch(this.handleError);
+    return this.http.post<WorkoutProgram>(url, body)
   }
 
-  DeleteExercise(workoutId:string, exerciseId: string) : Promise<WorkoutProgram>
+  DeleteExercise(workoutId:string, exerciseId: string)
   {
-    let url = this.baseUrl + "/exercises/DeleteExercise/" + workoutId;
-    const body = {exerciseId: exerciseId}
+    let url = this.baseUrl + "/exercises/DeleteExercise/" + workoutId + "/" + exerciseId;
 
-    return this.http.delete(url, {body:body})
-      .toPromise()
-      .then((response) => this.currentWorkout.next(response.json().WorkoutProgram as WorkoutProgram))
-      .catch(this.handleError);
+    return this.http.delete<Exercise>(url)
   }
 
-  CreateWorkoutActivity(workoutId: string, activityDescription: string) : Promise<WorkoutProgram>
+  CreateWorkoutActivity(workoutId: string, activityDescription: string)
   {
     let url = this.baseUrl + "/workoutActivities/CreateWorkoutActivity/" + workoutId;
 
@@ -184,10 +142,7 @@ export class FitnessApiService {
       description: activityDescription
     };
 
-    return this.http.post(url, body, {headers: this.headers})
-      .toPromise()
-      .then((response) => this.currentWorkout.next(response.json().WorkoutProgram as WorkoutProgram))
-      .catch(this.handleError);
+    return this.http.post<ActivityLog>(url, body)
   }
 
   private handleError(error: any): Promise<any> {

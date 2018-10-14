@@ -1,32 +1,38 @@
 const MongoClient = require('mongodb').MongoClient;
-//const url = "mongodb+srv://test:test@itwebassignment2-l9jgn.mongodb.net/admin";
-const url = "mongodb://127.0.0.1:27017/ITWEB_Assignment_2";
+const url = "mongodb://test:test@itwebassignment2-shard-00-00-l9jgn.mongodb.net:27017,itwebassignment2-shard-00-01-l9jgn.mongodb.net:27017,itwebassignment2-shard-00-02-l9jgn.mongodb.net:27017/test?ssl=true&replicaSet=ITWEBAssignment2-shard-0&authSource=admin&retryWrites=true";
 
 const mongoose = require('mongoose');
 const Exercise = require('../models/Exercise');
 const assert = require('assert');
 const linq = require('linqjs')
+const WorkoutProgram = require('../models/Workout.js')
 
 const createWorkoutProgram = function(req, res) {
-    var Workout = {workoutName: req.body.workoutName};
+    const exercise = {exerciseName: '',
+        description: '',
+        set: '',
+        reps: ''};
+
+    var array = [];
+    array.push(exercise);
+
+    const workoutProgram = {workoutName: req.body.workoutName,
+    exercises: array};
 
     MongoClient.connect(url,{useNewUrlParser:true},function(err, db){
         assert.equal(null, err);
 
-        db.db('ITTWEBAssignment2').collection('Workout').insertOne(Workout, function(err, result){
-            assert.equal(null,err);
-            console.log("Workout added");
-        });
+        db.db('ITWEB_Assignment_2').collection('Workout').insertOne(workoutProgram)
+            .then((result) => res.status(201).json({'WorkoutProgram': result}))
+            .catch((err) => res.status(400).json(err));
     });
-    
-    res.redirect("/");
 };
 
 const removeWorkout = function(req, res) {
     MongoClient.connect(url,{useNewUrlParser:true},function(err, db){
         assert.equal(null, err);
         
-        db.db("ITTWEBAssignment2").collection("Workout").findOneAndDelete({"_id" : ObjectId(req.url.workoutId) },function(err, result){
+        db.db("ITWEB_Assignment_2").collection("Workout").findOneAndDelete({"_id" : ObjectId(req.url.workoutId) },function(err, result){
             assert.equal(null, err);
             console.log("Workout deleted");
         });
@@ -39,12 +45,12 @@ const selectWorkout = function(req, res) {
     MongoClient.connect(url,{useNewUrlParser:true},function(err, db){
         assert.equal(null, err);
         
-        var selectedWorkout = db.db("ITTWEBAssignment2").collection("Workout").find({"_id" : ObjectId(req.url.workoutId) },function(err, result){
+        var selectedWorkout = db.db("ITWEB_Assignment_2").collection("Workout").find({"_id" : ObjectId(req.url.workoutId) },function(err, result){
             assert.equal(null, err);
         });
 
         var resultArray = [];
-        db.db("ITTWEBAssignment2").collection("Exercise").find({}, (err, data) => {
+        db.db("ITWEB_Assignment_2").collection("Exercise").find({}, (err, data) => {
             assert.equal(null, err);
             data.foreach(element1 => {
                 selectedWorkout.exercises.foreach(element2 => {
@@ -71,7 +77,7 @@ const CreateWorkoutActivity = function(req, res) {
     MongoClient.connect(url,{useNewUrlParser:true},function(err, db){
         assert.equal(null, err);
 
-        db.db('ITTWEBAssignment2').collection('Workout').update({_id: ObjectId(req.url.workoutId)},
+        db.db('ITWEB_Assignment_2').collection('Workout').update({_id: ObjectId(req.url.workoutId)},
         { $push: {"activities": {
             timestamp: Date.now,
             description: req.body.description
@@ -89,13 +95,20 @@ const GetAllWorkouts = function(req, res) {
     MongoClient.connect(url,{useNewUrlParser:true},function(err, db){
         assert.equal(null, err);
 
-        db.db("ITTWEBAssignment2").collection("Workout").find({},function(err, result){
-            assert.equal(null, err);
-            allWorkouts.push(result);
+        db.db("ITWEB_Assignment_2").collection("Workout").find({},function(err, result){
+            
+            result.forEach(element => {
+                allWorkouts.push(element);
+            });
+
+            console.log(allWorkouts);
+
+            if((result != null))
+                res.status(200).send(allWorkouts);
+            else
+                res.status(404).send();
         });
-    }).then(() => {
-        return allWorkouts;
-    });;
+    });
 }
 
 module.exports = {

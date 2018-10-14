@@ -1,6 +1,5 @@
 const MongoClient = require('mongodb').MongoClient;
-//const url = "mongodb+srv://test:test@itwebassignment2-l9jgn.mongodb.net";
-const url = "mongodb://127.0.0.1:27017/ITWEB_Assignment_2";
+const url = "mongodb://test:test@itwebassignment2-shard-00-00-l9jgn.mongodb.net:27017,itwebassignment2-shard-00-01-l9jgn.mongodb.net:27017,itwebassignment2-shard-00-02-l9jgn.mongodb.net:27017/test?ssl=true&replicaSet=ITWEBAssignment2-shard-0&authSource=admin&retryWrites=true";
 const assert = require('assert');
 const User = require('../models/User.js');
 
@@ -10,24 +9,24 @@ const CreateUser = function(req, res) {
     MongoClient.connect(url,{useNewUrlParser:true},function(err, db){
         assert.equal(null, err);
         db.db('ITWEB_Assignment_2').collection('User').insertOne(user)
-                                                     .then((userResult) => res.status(201).json({currentUser: userResult}))
-                                                     .catch((err) => res.status(400).send(err));
+                                                     .then((userResult) => res.status(201).json(userResult))
+                                                     .catch((err) => res.status(400).json(err));
     });
 };
 
 const Login = function(req, res) {
-    var isLoggedIn = false;
-    
     MongoClient.connect(url,{useNewUrlParser:true},function(err, db){
-    db.db("ITWEB_Assignment_2").collection("User").find({username: req.params.username}, function(err, user) {
-        assert.equal(null, err);
-        isLoggedIn = true;
-        user => res.status(200).json({currentUser: user, LoggedIn: isLoggedIn});
+    db.db("ITWEB_Assignment_2").collection("User").findOne({'username': req.params.username}, function(err, user) {
+
+        if((user != null) && (user.username === req.params.username))
+            res.status(200).json({'user': user});
+        else
+            res.status(401).send();
     })
     });
 };  
 
 module.exports = {
-    CreateUser, 
+    CreateUser,
     Login
 };
