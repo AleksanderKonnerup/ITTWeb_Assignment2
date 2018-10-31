@@ -8,7 +8,6 @@ const http = require('http');
 const server = http.createServer(app);
 const path = require('path');
 
-const port = (process.env.PORT || 3000);
 
 
 app.use(bodyParser.json());
@@ -28,6 +27,7 @@ app.use('/api', api)
 app.all('*', function(req, res) {
   res.status(200).sendFile(__dirname + '/src/index.html');
 });
+const port = (process.env.PORT || 8080);
 
 server.listen(port,function(){
   console.log("Server running on: " + port);
