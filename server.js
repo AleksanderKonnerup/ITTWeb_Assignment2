@@ -24,7 +24,7 @@ var distDir = __dirname + "/dist/";
 app.use(express.static(distDir + "ITTWebAssignment2"));
 
 app.use('/api', api)
-app.get('*', function(req, res) {
+app.all('*', function(req, res) {
   res.status(200).sendFile(__dirname + '/src/index.html');
 });
 const port = (process.env.PORT || 8080);
