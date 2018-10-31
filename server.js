@@ -21,12 +21,12 @@ app.use('/api', function(req, res, next) {
 });
 
 var distDir = __dirname + "/dist/";
-app.use(express.static(distDir + "ITTWebAssignment2"));
+app.use(express.static(distDir));
 
-app.use('/api', api)
-app.all('*', function(req, res) {
-  res.status(200).sendFile(__dirname + '/src/index.html');
-});
+//app.use('/api', api)
+// app.all('*', function(req, res) {
+//   res.status(200).sendFile(__dirname + '/src/index.html');
+// });
 const port = (process.env.PORT || 8080);
 
 server.listen(port,function(){
