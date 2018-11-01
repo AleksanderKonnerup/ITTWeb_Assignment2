@@ -4,10 +4,12 @@
     <div *ngIf="!LoggedIn.value">
         <h3>Login:</h3>
         <input class="form-control" [formControl]="username" placeholder="Username"/>
+        <br/>
         <button class="btn btn-success" (click)="loginClick()">Login</button>
     </div>
       <div *ngIf="LoggedIn.value">
         <h2>Current User: {{currentUser.value.user.username}}</h2>
+        <br/>
         <button class="btn btn-danger" (click)="logoutClick()">Logout</button>
       </div>
   </div>
@@ -15,6 +17,7 @@
   <div *ngIf="!LoggedIn.value" class="col-md-5">
     <h3>Create new user:</h3>
     <input class="form-control" [formControl]="newusername" placeholder="New Username"/>
+    <br/>
     <button class="btn btn-success" (click)="onCreateUserClick()">Create new User</button>
   </div>
 </div>
