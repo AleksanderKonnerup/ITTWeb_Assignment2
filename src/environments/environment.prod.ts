@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  api: '/api'
+  api: "https://ittweb-assignment2-gruppe2.herokuapp.com/api/"
 };
